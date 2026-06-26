@@ -8,7 +8,7 @@ authors.workspace = true
 description = "CAD feature indexing — similar part search and design reuse via HyperDB"
 
 [dependencies]
-hyperdb = { path = "../../../hyperdb" }
+hyperdb = { workspace = true }
 physical-brep = { path = "../../geometry/brep" }
 physical-lut = { path = "../../core/lut" }
 

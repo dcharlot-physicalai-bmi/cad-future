@@ -93,7 +93,6 @@ members = [
     "crates/connect/openie",
     "crates/connect/firmware",
     "crates/platform/mcp",
-    "hyperdb",
     "crates/tests/integration",
     "crates/tests/proptest",
 ]
@@ -116,7 +115,7 @@ physical-cascade = { path = "crates/core/cascade" }
 physical-ui = { path = "crates/ui" }
 physical-input = { path = "crates/input" }
 physical-viewport = { path = "crates/render/viewport" }
-hyperdb = { path = "hyperdb" }
+hyperdb = { git = "https://github.com/dcharlot-physicalai-bmi/hyperdb" }
 physical-mfg-toolpath = { path = "crates/mfg/toolpath" }
 physical-mfg-slicer = { path = "crates/mfg/slicer" }
 physical-mfg-laser = { path = "crates/mfg/laser" }
