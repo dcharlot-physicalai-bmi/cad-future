@@ -1,0 +1,12 @@
+[package]
+name = "physical-flow-cad"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Flow matching with projected constraints in a CAD-native latent space"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }

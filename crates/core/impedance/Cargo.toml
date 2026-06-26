@@ -1,0 +1,12 @@
+[package]
+name = "physical-impedance"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Periodic stack of computation — measure thermodynamic impedance gaps and predict optimization outcomes"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }

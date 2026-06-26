@@ -1,0 +1,71 @@
+[package]
+name = "physical-server"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "OpenIE dev server and cloud collaboration"
+
+[[bin]]
+name = "openie-dev"
+path = "src/dev.rs"
+
+[[bin]]
+name = "openie-server"
+path = "src/main.rs"
+
+[dependencies]
+axum = { workspace = true }
+tokio = { workspace = true }
+tower-http = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+jsonwebtoken = { workspace = true }
+argon2 = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+
+# Geometry + manufacturing
+physical-brep = { path = "../../geometry/brep" }
+physical-tessellation = { path = "../../geometry/tessellation" }
+physical-mfg-toolpath = { path = "../../mfg/toolpath" }
+physical-mfg-slicer = { path = "../../mfg/slicer" }
+physical-mfg-laser = { path = "../../mfg/laser" }
+physical-mfg-cnc = { path = "../../mfg/cnc" }
+
+# Connect core + all protocol drivers
+physical-connect-core = { path = "../../connect/core" }
+physical-connect-octoprint = { path = "../../connect/octoprint" }
+physical-connect-moonraker = { path = "../../connect/moonraker" }
+physical-connect-bambu = { path = "../../connect/bambu" }
+physical-connect-prusalink = { path = "../../connect/prusalink" }
+physical-connect-duet = { path = "../../connect/duet" }
+physical-connect-repetier = { path = "../../connect/repetier" }
+physical-connect-fluidnc = { path = "../../connect/fluidnc" }
+physical-connect-serial = { path = "../../connect/serial" }
+physical-connect-linuxcnc = { path = "../../connect/linuxcnc" }
+physical-connect-cncjs = { path = "../../connect/cncjs" }
+physical-connect-haas = { path = "../../connect/haas" }
+physical-connect-mtconnect = { path = "../../connect/mtconnect" }
+physical-connect-ultimaker = { path = "../../connect/ultimaker" }
+physical-connect-formlabs = { path = "../../connect/formlabs" }
+physical-connect-lightburn = { path = "../../connect/lightburn" }
+physical-connect-ruida = { path = "../../connect/ruida" }
+physical-connect-k40 = { path = "../../connect/k40" }
+physical-connect-discover = { path = "../../connect/discover" }
+physical-connect-openie = { path = "../../connect/openie" }
+
+# LUT
+physical-lut = { path = "../../core/lut" }
+physical-units = { workspace = true }
+
+# Emit formats
+physical-emit-threemf = { path = "../../emit/threemf" }
+physical-emit-dxf = { path = "../../emit/dxf" }
+physical-emit-bgcode = { path = "../../emit/bgcode" }
+physical-emit-ufp = { path = "../../emit/ufp" }
+physical-emit-ruida-rd = { path = "../../emit/ruida-rd" }
+
+[dev-dependencies]
+tokio = { workspace = true }

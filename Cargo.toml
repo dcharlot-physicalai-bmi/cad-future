@@ -1,0 +1,158 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/core/units",
+    "crates/core/lut",
+    "crates/core/constraint",
+    "crates/core/graph",
+    "crates/core/cascade",
+    "crates/geometry/brep",
+    "crates/geometry/parametric",
+    "crates/geometry/sketch",
+    "crates/geometry/tessellation",
+    "crates/simulation/analytical",
+    "crates/simulation/fea",
+    "crates/simulation/dfm",
+    "crates/simulation/snn",
+    "crates/simulation/cfd",
+    "crates/simulation/topology",
+    "crates/emit/step",
+    "crates/emit/stl",
+    "crates/emit/dxf",
+    "crates/emit/threemf",
+    "crates/emit/gltf",
+    "crates/emit/iges",
+    "crates/emit/obj",
+    "crates/emit/oie",
+    "crates/emit/bgcode",
+    "crates/emit/ufp",
+    "crates/emit/ruida-rd",
+    "crates/emit/drawing",
+    "crates/ui",
+    "crates/input",
+    "crates/render/viewport",
+    "crates/render/instancing",
+    "crates/render/lod",
+    "crates/render/overlay",
+    "crates/reasoning/inference",
+    "crates/reasoning/search",
+    "crates/reasoning/agent",
+    "crates/reasoning/surrogate",
+    "crates/reasoning/generative",
+    "crates/reasoning/scan2cad",
+    "crates/reasoning/inverse",
+    "crates/reasoning/gen-bridge",
+    "crates/reasoning/flow-cad",
+    "crates/core/cfl",
+    "crates/core/impedance",
+    "crates/connect/zoo",
+    "crates/core/costing",
+    "crates/core/standards",
+    "crates/simulation/em",
+    "crates/simulation/digital-twin",
+    "crates/core/bom",
+    "crates/core/tolerance",
+    "crates/core/knowledge",
+    "crates/platform/review",
+    "crates/platform/eco",
+    "crates/reasoning/intent",
+    "crates/emit/parasolid",
+    "crates/emit/kicad",
+    "crates/emit/touchstone",
+    "crates/emit/gerber",
+    "crates/emit/idf",
+    "crates/connect/github-cad",
+    "crates/connect/mcmaster",
+    "crates/platform/native",
+    "crates/platform/web",
+    "crates/platform/server",
+    "crates/mfg/toolpath",
+    "crates/mfg/slicer",
+    "crates/mfg/laser",
+    "crates/mfg/cnc",
+    "crates/connect/core",
+    "crates/connect/octoprint",
+    "crates/connect/moonraker",
+    "crates/connect/bambu",
+    "crates/connect/prusalink",
+    "crates/connect/duet",
+    "crates/connect/repetier",
+    "crates/connect/fluidnc",
+    "crates/connect/serial",
+    "crates/connect/linuxcnc",
+    "crates/connect/cncjs",
+    "crates/connect/haas",
+    "crates/connect/mtconnect",
+    "crates/connect/ruida",
+    "crates/connect/lightburn",
+    "crates/connect/k40",
+    "crates/connect/ultimaker",
+    "crates/connect/formlabs",
+    "crates/connect/discover",
+    "crates/connect/protocol",
+    "crates/connect/openie",
+    "crates/connect/firmware",
+    "crates/platform/mcp",
+    "hyperdb",
+    "crates/tests/integration",
+    "crates/tests/proptest",
+]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.94.1"
+license = "MIT"
+authors = ["David Jean Charlot"]
+description = "CadFuture — AI-native, LUT-first CAD, multi-physics, and manufacturing toolchain for physical AI."
+repository = "https://github.com/dcharlot-physicalai-bmi/cad-future"
+
+[workspace.dependencies]
+# Internal crates
+physical-units = { path = "crates/core/units" }
+physical-lut = { path = "crates/core/lut" }
+physical-constraint = { path = "crates/core/constraint" }
+physical-graph = { path = "crates/core/graph" }
+physical-cascade = { path = "crates/core/cascade" }
+physical-ui = { path = "crates/ui" }
+physical-input = { path = "crates/input" }
+physical-viewport = { path = "crates/render/viewport" }
+hyperdb = { path = "hyperdb" }
+physical-mfg-toolpath = { path = "crates/mfg/toolpath" }
+physical-mfg-slicer = { path = "crates/mfg/slicer" }
+physical-mfg-laser = { path = "crates/mfg/laser" }
+physical-mfg-cnc = { path = "crates/mfg/cnc" }
+physical-connect-core = { path = "crates/connect/core" }
+
+# External
+nalgebra = "0.34"
+petgraph = { version = "0.8", features = ["serde-1"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+bincode = { version = "2.0", features = ["serde"] }
+parking_lot = "0.12"
+rayon = "1.11"
+anyhow = "1.0"
+wgpu = "29.0"
+glam = { version = "0.32", features = ["bytemuck"] }
+bytemuck = "1.25"
+log = "0.4"
+wasm-bindgen = "0.2.114"
+wasm-bindgen-futures = "0.4"
+web-sys = "0.3"
+js-sys = "0.3"
+console_error_panic_hook = "0.1"
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.6", features = ["cors"] }
+jsonwebtoken = { version = "10", features = ["aws_lc_rs"] }
+argon2 = "0.5"
+uuid = { version = "1", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+async-trait = "0.1"
+thiserror = "2"
+proptest = "1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

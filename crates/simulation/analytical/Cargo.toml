@@ -1,0 +1,12 @@
+[package]
+name = "physical-analytical"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Handbook formulas"
+
+[dependencies]
+glam = { workspace = true }
+physical-brep = { path = "../../geometry/brep" }

@@ -1,0 +1,16 @@
+[package]
+name = "physical-emit-gltf"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "glTF/GLB emitter"
+
+[dependencies]
+physical-tessellation = { path = "../../geometry/tessellation" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+physical-brep = { path = "../../geometry/brep" }

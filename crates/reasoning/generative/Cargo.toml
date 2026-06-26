@@ -1,0 +1,16 @@
+[package]
+name = "physical-generative"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Generative CAD — design-space exploration, LHS sampling, analytical evaluation, Pareto front"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+physical-units = { workspace = true }
+physical-lut = { workspace = true }
+physical-brep = { path = "../../geometry/brep" }
+glam = { workspace = true }

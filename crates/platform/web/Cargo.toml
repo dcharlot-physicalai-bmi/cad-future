@@ -1,0 +1,37 @@
+[package]
+name = "physical-web"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "WASM + WebGPU entry point for OpenIE"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+physical-ui = { workspace = true }
+physical-input = { workspace = true }
+physical-viewport = { workspace = true }
+physical-cascade = { workspace = true }
+physical-lut = { workspace = true }
+physical-units = { workspace = true }
+wgpu = { workspace = true }
+glam = { workspace = true }
+bytemuck = { workspace = true }
+log = { workspace = true }
+wasm-bindgen = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+web-sys = { workspace = true, features = [
+    "console",
+    "Window",
+    "Document",
+    "HtmlCanvasElement",
+    "GpuCanvasContext",
+] }
+js-sys = { workspace = true }
+console_error_panic_hook = { workspace = true }
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

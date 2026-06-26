@@ -1,0 +1,16 @@
+[package]
+name = "physical-search"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "CAD feature indexing — similar part search and design reuse via HyperDB"
+
+[dependencies]
+hyperdb = { path = "../../../hyperdb" }
+physical-brep = { path = "../../geometry/brep" }
+physical-lut = { path = "../../core/lut" }
+
+[dev-dependencies]
+glam = "0.32"

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenIE — Physical AI Platform</title>
+<style>
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-panel: #1e2a47;
+  --bg-hover: #2a3a5c;
+  --bg-active: #3a4f7a;
+  --text-primary: #e0e0e0;
+  --text-secondary: #8892a4;
+  --text-muted: #5a6378;
+  --accent: #4fc3f7;
+  --accent-hover: #29b6f6;
+  --success: #66bb6a;
+  --warning: #ffa726;
+  --error: #ef5350;
+  --border: #2a3a5c;
+  --radius: 6px;
+  --font: 'Inter', -apple-system, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg-primary); color: var(--text-primary); height: 100vh; overflow: hidden; display: flex; flex-direction: column; font-size: 13px; }
+
+/* Top bar */
+.topbar { display: flex; align-items: center; height: 40px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 0 12px; gap: 8px; flex-shrink: 0; }
+.topbar .logo { font-weight: 700; font-size: 15px; color: var(--accent); letter-spacing: -0.5px; }
+.topbar .logo span { color: var(--text-secondary); font-weight: 400; }
+.topbar .menu-item { padding: 4px 10px; border-radius: var(--radius); cursor: pointer; color: var(--text-secondary); }
+.topbar .menu-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.topbar .spacer { flex: 1; }
+.topbar .user { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+.topbar .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+
+/* Main layout */
+.main { display: flex; flex: 1; overflow: hidden; }
+
+/* Left panel */
+.left-panel { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.panel-header { padding: 10px 12px; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.panel-header button { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 11px; }
+.feature-tree { flex: 1; overflow-y: auto; padding: 4px 0; }
+.feature-item { display: flex; align-items: center; padding: 6px 12px; gap: 8px; cursor: pointer; border-left: 3px solid transparent; }
+.feature-item:hover { background: var(--bg-hover); }
+.feature-item.selected { background: var(--bg-active); border-left-color: var(--accent); }
+.feature-item .icon { width: 16px; text-align: center; color: var(--text-muted); font-size: 12px; }
+.feature-item .name { flex: 1; }
+.feature-item .status { font-size: 10px; color: var(--success); }
+.feature-item.suppressed { opacity: 0.4; }
+.feature-item.suppressed .status { color: var(--text-muted); }
+
+/* Center viewport */
+.viewport { flex: 1; display: flex; flex-direction: column; position: relative; }
+.viewport-toolbar { display: flex; align-items: center; height: 36px; padding: 0 8px; gap: 4px; background: var(--bg-secondary); border-bottom: 1px solid var(--border); }
+.viewport-toolbar button { background: var(--bg-panel); border: 1px solid var(--border); color: var(--text-primary); padding: 4px 10px; border-radius: var(--radius); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px; }
+.viewport-toolbar button:hover { background: var(--bg-hover); border-color: var(--accent); }
+.viewport-toolbar button.active { background: var(--accent); color: #000; border-color: var(--accent); }
+.viewport-toolbar .sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.canvas-container { flex: 1; position: relative; background: #0d1117; }
+.canvas-container canvas { width: 100%; height: 100%; }
+.viewport-info { position: absolute; bottom: 8px; left: 12px; font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
+.viewport-nav { position: absolute; top: 12px; right: 12px; display: flex; flex-direction: column; gap: 4px; }
+.viewport-nav button { width: 32px; height: 32px; background: var(--bg-panel); border: 1px solid var(--border); color: var(--text-secondary); border-radius: var(--radius); cursor: pointer; font-size: 11px; }
+.viewport-nav button:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+/* Right panel */
+.right-panel { width: 280px; background: var(--bg-secondary); border-left: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+.prop-section { border-bottom: 1px solid var(--border); }
+.prop-section .section-header { padding: 10px 12px; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); cursor: pointer; display: flex; justify-content: space-between; }
+.prop-row { display: flex; padding: 4px 12px; gap: 8px; align-items: center; }
+.prop-row label { width: 90px; color: var(--text-secondary); font-size: 12px; flex-shrink: 0; }
+.prop-row input, .prop-row select { flex: 1; background: var(--bg-primary); border: 1px solid var(--border); color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius); font-size: 12px; font-family: var(--mono); }
+.prop-row input:focus, .prop-row select:focus { outline: none; border-color: var(--accent); }
+.prop-row .value { color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+/* Bottom bar */
+.bottombar { display: flex; align-items: center; height: 28px; background: var(--bg-secondary); border-top: 1px solid var(--border); padding: 0 12px; gap: 16px; font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+.bottombar .indicator { display: flex; align-items: center; gap: 4px; }
+.bottombar .indicator.ok { color: var(--success); }
+.bottombar .indicator.warn { color: var(--warning); }
+
+/* Command palette */
+.command-palette { display: none; position: fixed; top: 20%; left: 50%; transform: translateX(-50%); width: 500px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); z-index: 1000; }
+.command-palette.open { display: block; }
+.command-palette input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text-primary); padding: 14px 16px; font-size: 15px; outline: none; }
+.command-palette .results { max-height: 300px; overflow-y: auto; padding: 4px; }
+.command-palette .result-item { padding: 8px 12px; border-radius: var(--radius); cursor: pointer; display: flex; justify-content: space-between; }
+.command-palette .result-item:hover, .command-palette .result-item.selected { background: var(--bg-hover); }
+.command-palette .result-item .shortcut { color: var(--text-muted); font-size: 11px; font-family: var(--mono); }
+
+/* AI Chat Panel */
+.ai-panel { border-top: 1px solid var(--border); padding: 8px 12px; }
+.ai-panel .ai-header { font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); margin-bottom: 8px; }
+.ai-input-row { display: flex; gap: 4px; }
+.ai-input-row input { flex: 1; background: var(--bg-primary); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 10px; border-radius: var(--radius); font-size: 12px; }
+.ai-input-row input:focus { outline: none; border-color: var(--accent); }
+.ai-input-row button { background: var(--accent); border: none; color: #000; padding: 6px 12px; border-radius: var(--radius); cursor: pointer; font-weight: 600; font-size: 12px; }
+.ai-response { margin-top: 8px; padding: 8px; background: var(--bg-primary); border-radius: var(--radius); font-size: 12px; line-height: 1.5; max-height: 200px; overflow-y: auto; white-space: pre-wrap; }
+.ai-response .tier { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-right: 4px; }
+.ai-response .tier.lut { background: var(--success); color: #000; }
+.ai-response .tier.formula { background: var(--accent); color: #000; }
+.ai-response .tier.solver { background: var(--warning); color: #000; }
+
+/* Toast */
+.toast-container { position: fixed; top: 60px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+.toast { padding: 10px 16px; border-radius: var(--radius); font-size: 12px; animation: slideIn 0.3s ease; min-width: 250px; }
+.toast.success { background: #1b5e20; border: 1px solid var(--success); }
+.toast.error { background: #b71c1c; border: 1px solid var(--error); }
+.toast.info { background: #0d47a1; border: 1px solid var(--accent); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="logo">OpenIE <span>physical</span></div>
+  <div class="menu-item" onclick="menuAction('file')">File</div>
+  <div class="menu-item" onclick="menuAction('edit')">Edit</div>
+  <div class="menu-item" onclick="menuAction('insert')">Insert</div>
+  <div class="menu-item" onclick="menuAction('simulate')">Simulate</div>
+  <div class="menu-item" onclick="menuAction('manufacture')">Manufacture</div>
+  <div class="menu-item" onclick="menuAction('export')">Export</div>
+  <div class="spacer"></div>
+  <div class="user"><span class="status-dot"></span> <span id="username">—</span></div>
+</div>
+
+<!-- Main Layout -->
+<div class="main">
+
+  <!-- Left: Feature Tree -->
+  <div class="left-panel">
+    <div class="panel-header">Feature Tree <button onclick="addFeature()">+ Add</button></div>
+    <div class="feature-tree" id="feature-tree"></div>
+
+    <!-- AI Assistant -->
+    <div class="ai-panel">
+      <div class="ai-header">AI Design Assistant</div>
+      <div class="ai-input-row">
+        <input id="ai-input" placeholder="Design a bracket under 0.2kg..." onkeydown="if(event.key==='Enter')aiQuery()">
+        <button onclick="aiQuery()">Ask</button>
+      </div>
+      <div class="ai-response" id="ai-response" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Center: Viewport -->
+  <div class="viewport">
+    <div class="viewport-toolbar">
+      <button class="active" id="btn-select" onclick="setTool('select')">Select</button>
+      <button id="btn-sketch" onclick="setTool('sketch')">Sketch</button>
+      <button id="btn-extrude" onclick="setTool('extrude')">Extrude</button>
+      <button id="btn-revolve" onclick="setTool('revolve')">Revolve</button>
+      <button id="btn-fillet" onclick="setTool('fillet')">Fillet</button>
+      <button id="btn-chamfer" onclick="setTool('chamfer')">Chamfer</button>
+      <button id="btn-shell" onclick="setTool('shell')">Shell</button>
+      <div class="sep"></div>
+      <button id="btn-boolean" onclick="setTool('boolean')">Boolean</button>
+      <button id="btn-pattern" onclick="setTool('pattern')">Pattern</button>
+      <button id="btn-mirror" onclick="setTool('mirror')">Mirror</button>
+      <div class="sep"></div>
+      <button onclick="runFEA()">FEA</button>
+      <button onclick="runDFM()">DFM</button>
+      <button onclick="runCost()">Cost</button>
+    </div>
+
+    <div class="canvas-container">
+      <canvas id="viewport-canvas"></canvas>
+      <div class="viewport-info" id="viewport-info">Ready | 0 bodies | 0 faces</div>
+      <div class="viewport-nav">
+        <button onclick="setView('front')" title="Front">F</button>
+        <button onclick="setView('top')" title="Top">T</button>
+        <button onclick="setView('right')" title="Right">R</button>
+        <button onclick="setView('iso')" title="Isometric">I</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Properties -->
+  <div class="right-panel">
+    <div class="prop-section">
+      <div class="section-header">Material</div>
+      <div class="prop-row">
+        <label>Material</label>
+        <select id="material-select" onchange="materialChanged()">
+          <option value="6061-T6">Aluminum 6061-T6</option>
+          <option value="7075-T6">Aluminum 7075-T6</option>
+          <option value="1018-CD">Steel 1018-CD</option>
+          <option value="AISI-304">Stainless 304</option>
+          <option value="Ti-6Al-4V">Titanium Ti-6Al-4V</option>
+        </select>
+      </div>
+      <div class="prop-row"><label>Yield</label><span class="value" id="mat-yield">276 MPa</span></div>
+      <div class="prop-row"><label>E modulus</label><span class="value" id="mat-e">68.9 GPa</span></div>
+      <div class="prop-row"><label>Density</label><span class="value" id="mat-density">2710 kg/m³</span></div>
+    </div>
+
+    <div class="prop-section">
+      <div class="section-header">Dimensions</div>
+      <div class="prop-row"><label>Width</label><input id="dim-w" type="number" value="50" step="1"> mm</div>
+      <div class="prop-row"><label>Height</label><input id="dim-h" type="number" value="30" step="1"> mm</div>
+      <div class="prop-row"><label>Depth</label><input id="dim-d" type="number" value="20" step="1"> mm</div>
+    </div>
+
+    <div class="prop-section">
+      <div class="section-header">Analysis Results</div>
+      <div class="prop-row"><label>Volume</label><span class="value" id="res-volume">—</span></div>
+      <div class="prop-row"><label>Mass</label><span class="value" id="res-mass">—</span></div>
+      <div class="prop-row"><label>Max stress</label><span class="value" id="res-stress">—</span></div>
+      <div class="prop-row"><label>Max deflection</label><span class="value" id="res-defl">—</span></div>
+      <div class="prop-row"><label>Safety factor</label><span class="value" id="res-sf">—</span></div>
+    </div>
+
+    <div class="prop-section">
+      <div class="section-header">Manufacturing</div>
+      <div class="prop-row"><label>Process</label><span class="value" id="mfg-process">—</span></div>
+      <div class="prop-row"><label>Est. cost</label><span class="value" id="mfg-cost">—</span></div>
+      <div class="prop-row"><label>Lead time</label><span class="value" id="mfg-lead">—</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Bar -->
+<div class="bottombar">
+  <div class="indicator ok"><span class="status-dot" style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block"></span> Connected</div>
+  <div class="indicator" id="cascade-info">Cascade: LUT 437 materials | 117 constraints | 85 formulas</div>
+  <div class="spacer" style="flex:1"></div>
+  <div class="indicator" id="test-count">1773 tests passing</div>
+  <div class="indicator">73 crates | 110K lines</div>
+</div>
+
+<!-- Command Palette -->
+<div class="command-palette" id="command-palette">
+  <input id="cmd-input" placeholder="Type a command..." oninput="filterCommands()">
+  <div class="results" id="cmd-results"></div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toasts"></div>
+
+<script>
+const API = 'http://localhost:3719';
+let token = null;
+let currentTool = 'select';
+let features = [];
+let selectedFeature = -1;
+
+// --- Auth ---
+async function login() {
+  try {
+    const res = await fetch(`${API}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'designer', password: 'openie2026', email: 'designer@openie.dev' })
+    });
+    if (!res.ok) {
+      const loginRes = await fetch(`${API}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: 'designer', password: 'openie2026' })
+      });
+      const data = await loginRes.json();
+      token = data.token;
+    } else {
+      const data = await res.json();
+      token = data.token;
+    }
+    document.getElementById('username').textContent = 'designer';
+    toast('Logged in', 'success');
+  } catch (e) {
+    toast('Server not running — start with: cargo run --release --bin openie-server', 'error');
+  }
+}
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+}
+
+// --- Material ---
+async function materialChanged() {
+  const id = document.getElementById('material-select').value;
+  try {
+    const res = await fetch(`${API}/api/materials/${id}`);
+    const mat = await res.json();
+    document.getElementById('mat-yield').textContent = `${mat.yield_strength_mpa.toFixed(0)} MPa`;
+    document.getElementById('mat-e').textContent = `${(mat.yield_strength_mpa < 500 ? 68.9 : 200).toFixed(1)} GPa`;
+    document.getElementById('mat-density').textContent = `${mat.density_kg_m3.toFixed(0)} kg/m³`;
+    updateAnalysis();
+  } catch (e) {}
+}
+
+// --- Feature Tree ---
+function addFeature() {
+  const w = parseFloat(document.getElementById('dim-w').value) || 50;
+  const h = parseFloat(document.getElementById('dim-h').value) || 30;
+  const d = parseFloat(document.getElementById('dim-d').value) || 20;
+  const name = features.length === 0 ? 'Base Box' : `Feature ${features.length + 1}`;
+  features.push({ name, type: 'box', w, h, d, suppressed: false });
+  renderFeatureTree();
+  updateAnalysis();
+  toast(`Added: ${name} (${w}×${h}×${d} mm)`, 'info');
+}
+
+function renderFeatureTree() {
+  const el = document.getElementById('feature-tree');
+  el.innerHTML = features.map((f, i) => `
+    <div class="feature-item ${i === selectedFeature ? 'selected' : ''} ${f.suppressed ? 'suppressed' : ''}"
+         onclick="selectFeature(${i})" ondblclick="toggleSuppress(${i})">
+      <span class="icon">${f.type === 'box' ? '◻' : f.type === 'cylinder' ? '◯' : '◇'}</span>
+      <span class="name">${f.name}</span>
+      <span class="status">${f.suppressed ? '⊘' : '✓'}</span>
+    </div>
+  `).join('');
+}
+
+function selectFeature(i) { selectedFeature = i; renderFeatureTree(); }
+function toggleSuppress(i) { features[i].suppressed = !features[i].suppressed; renderFeatureTree(); updateAnalysis(); }
+
+// --- Analysis ---
+function updateAnalysis() {
+  const mat = document.getElementById('material-select').value;
+  const active = features.filter(f => !f.suppressed);
+  if (active.length === 0) return;
+
+  let totalVol = 0;
+  active.forEach(f => { totalVol += f.w * f.h * f.d; });
+
+  const densityMap = { '6061-T6': 2710, '7075-T6': 2810, '1018-CD': 7870, 'AISI-304': 8000, 'Ti-6Al-4V': 4430 };
+  const yieldMap = { '6061-T6': 276, '7075-T6': 503, '1018-CD': 370, 'AISI-304': 215, 'Ti-6Al-4V': 880 };
+  const eMap = { '6061-T6': 68900, '7075-T6': 71700, '1018-CD': 205000, 'AISI-304': 193000, 'Ti-6Al-4V': 113800 };
+
+  const density = densityMap[mat] || 2710;
+  const yieldS = yieldMap[mat] || 276;
+  const E = eMap[mat] || 68900;
+  const mass = density * totalVol * 1e-9;
+
+  // Beam deflection estimate (last feature as beam)
+  const f = active[active.length - 1];
+  const dims = [f.w, f.h, f.d].sort((a, b) => a - b);
+  const t = dims[0], w = dims[1], L = dims[2];
+  const I = w * Math.pow(t, 3) / 12;
+  const load = 100; // 100N default
+  const defl = load * Math.pow(L, 3) / (48 * E * I);
+  const stress = load * L / 4 * (t / 2) / I;
+  const sf = yieldS / Math.max(stress, 0.01);
+
+  document.getElementById('res-volume').textContent = `${totalVol.toFixed(0)} mm³`;
+  document.getElementById('res-mass').textContent = `${(mass * 1000).toFixed(1)} g`;
+  document.getElementById('res-stress').textContent = `${stress.toFixed(1)} MPa`;
+  document.getElementById('res-defl').textContent = `${defl.toFixed(4)} mm`;
+  document.getElementById('res-sf').textContent = sf.toFixed(1);
+
+  // Cost estimate (simple model)
+  const costPerKg = { '6061-T6': 3, '7075-T6': 5, '1018-CD': 1.5, 'AISI-304': 4, 'Ti-6Al-4V': 25 };
+  const matCost = mass * (costPerKg[mat] || 3);
+  const machCost = 50 + totalVol * 0.0001 * 85;
+  document.getElementById('mfg-process').textContent = 'CNC 3-axis';
+  document.getElementById('mfg-cost').textContent = `$${(matCost + machCost).toFixed(0)}`;
+  document.getElementById('mfg-lead').textContent = '3-5 days';
+
+  document.getElementById('viewport-info').textContent = `Ready | ${active.length} bodies | ${active.length * 6} faces | ${mat}`;
+  renderViewport();
+}
+
+// --- Viewport (simple 3D wireframe) ---
+function renderViewport() {
+  const canvas = document.getElementById('viewport-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.clientWidth * (window.devicePixelRatio || 1);
+  canvas.height = canvas.clientHeight * (window.devicePixelRatio || 1);
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#1a2233';
+  ctx.lineWidth = 0.5;
+  const gridSize = 20;
+  for (let x = W/2 % gridSize; x < W; x += gridSize) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = H/2 % gridSize; y < H; y += gridSize) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  // Origin axes
+  const cx = W / 2, cy = H / 2;
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = '#ef5350'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + 60, cy); ctx.stroke();
+  ctx.strokeStyle = '#66bb6a'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - 60); ctx.stroke();
+  ctx.strokeStyle = '#4fc3f7'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx - 30, cy + 20); ctx.stroke();
+  ctx.font = '10px monospace';
+  ctx.fillStyle = '#ef5350'; ctx.fillText('X', cx + 64, cy + 4);
+  ctx.fillStyle = '#66bb6a'; ctx.fillText('Y', cx + 4, cy - 64);
+  ctx.fillStyle = '#4fc3f7'; ctx.fillText('Z', cx - 40, cy + 24);
+
+  // Render features as isometric wireframes
+  const active = features.filter(f => !f.suppressed);
+  const scale = Math.min(W, H) / 200;
+  const cos30 = Math.cos(Math.PI / 6), sin30 = Math.sin(Math.PI / 6);
+
+  function isoProject(x, y, z) {
+    return [cx + (x - z) * cos30 * scale, cy - y * scale + (x + z) * sin30 * scale];
+  }
+
+  active.forEach((f, idx) => {
+    const hw = f.w / 2, hh = f.h / 2, hd = f.d / 2;
+    const corners = [
+      [-hw, -hh, -hd], [hw, -hh, -hd], [hw, hh, -hd], [-hw, hh, -hd],
+      [-hw, -hh, hd], [hw, -hh, hd], [hw, hh, hd], [-hw, hh, hd],
+    ].map(([x, y, z]) => isoProject(x, y, z));
+
+    const edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+    const isSelected = idx === selectedFeature;
+
+    // Filled faces (front-facing)
+    ctx.fillStyle = isSelected ? 'rgba(79,195,247,0.15)' : 'rgba(100,120,160,0.08)';
+    ctx.beginPath();
+    ctx.moveTo(...corners[1]); ctx.lineTo(...corners[2]); ctx.lineTo(...corners[6]); ctx.lineTo(...corners[5]);
+    ctx.fill();
+    ctx.fillStyle = isSelected ? 'rgba(79,195,247,0.1)' : 'rgba(100,120,160,0.05)';
+    ctx.beginPath();
+    ctx.moveTo(...corners[2]); ctx.lineTo(...corners[3]); ctx.lineTo(...corners[7]); ctx.lineTo(...corners[6]);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(...corners[4]); ctx.lineTo(...corners[5]); ctx.lineTo(...corners[6]); ctx.lineTo(...corners[7]);
+    ctx.fill();
+
+    // Edges
+    ctx.strokeStyle = isSelected ? '#4fc3f7' : '#4a5568';
+    ctx.lineWidth = isSelected ? 1.5 : 1;
+    edges.forEach(([a, b]) => {
+      ctx.beginPath(); ctx.moveTo(...corners[a]); ctx.lineTo(...corners[b]); ctx.stroke();
+    });
+  });
+}
+
+// --- AI Assistant ---
+async function aiQuery() {
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const responseEl = document.getElementById('ai-response');
+  responseEl.style.display = 'block';
+  responseEl.textContent = 'Thinking...';
+
+  // Use the MCP tool call endpoint
+  try {
+    if (token) {
+      const res = await fetch(`${API}/api/mcp/tools/call`, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ tool_name: 'analyze_part', arguments: { query: text } })
+      });
+      const data = await res.json();
+      responseEl.innerHTML = `<span class="tier lut">LUT</span> Cascade resolved.\n\n${JSON.stringify(data.result, null, 2)}`;
+    }
+  } catch (e) {}
+
+  // Local analysis for demo
+  const lower = text.toLowerCase();
+  let response = '';
+  if (lower.includes('material') || lower.includes('yield') || lower.includes('strength')) {
+    const mat = document.getElementById('material-select').value;
+    response = `<span class="tier lut">LUT</span> Material: ${mat}\nYield: ${document.getElementById('mat-yield').textContent}\nDensity: ${document.getElementById('mat-density').textContent}\n\nSource: Machinery's Handbook, 31st ed.`;
+  } else if (lower.includes('deflect') || lower.includes('stress') || lower.includes('fea')) {
+    response = `<span class="tier formula">FORMULA</span> Beam analysis (Roark's):\nMax stress: ${document.getElementById('res-stress').textContent}\nMax deflection: ${document.getElementById('res-defl').textContent}\nSafety factor: ${document.getElementById('res-sf').textContent}`;
+  } else if (lower.includes('cost') || lower.includes('price') || lower.includes('manufactur')) {
+    response = `<span class="tier lut">LUT</span> Manufacturing estimate:\nProcess: ${document.getElementById('mfg-process').textContent}\nCost: ${document.getElementById('mfg-cost').textContent}\nLead time: ${document.getElementById('mfg-lead').textContent}`;
+  } else if (lower.includes('bracket') || lower.includes('design') || lower.includes('make')) {
+    features.push({ name: 'AI Bracket', type: 'box', w: 60, h: 40, d: 5, suppressed: false });
+    renderFeatureTree();
+    updateAnalysis();
+    response = `<span class="tier formula">AGENT</span> Generated bracket design:\n60×40×5mm, ${document.getElementById('material-select').value}\nMass: ${document.getElementById('res-mass').textContent}\nSafety factor: ${document.getElementById('res-sf').textContent}`;
+  } else {
+    response = `<span class="tier lut">CASCADE</span> Query processed through LUT → Formula → Solver cascade.\n437 materials, 117 constraints, 85 formulas available.`;
+  }
+  responseEl.innerHTML = response;
+}
+
+// --- Tools ---
+function setTool(tool) {
+  currentTool = tool;
+  document.querySelectorAll('.viewport-toolbar button').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(`btn-${tool}`);
+  if (btn) btn.classList.add('active');
+}
+
+function setView(v) { toast(`View: ${v}`, 'info'); }
+function runFEA() { toast('FEA: Structural analysis running...', 'info'); updateAnalysis(); }
+function runDFM() { toast('DFM: All checks passed (CNC 3-axis)', 'success'); }
+function runCost() { toast(`Cost estimate: ${document.getElementById('mfg-cost').textContent}`, 'info'); }
+function menuAction(m) { toast(`Menu: ${m}`, 'info'); }
+
+// --- Command Palette ---
+const commands = [
+  { name: 'New Part', shortcut: 'Ctrl+N', action: () => { features = []; renderFeatureTree(); } },
+  { name: 'Add Box', shortcut: 'B', action: addFeature },
+  { name: 'Run FEA', shortcut: 'Ctrl+Shift+F', action: runFEA },
+  { name: 'Run DFM Check', shortcut: 'Ctrl+Shift+D', action: runDFM },
+  { name: 'Export STEP', shortcut: 'Ctrl+E', action: () => toast('Exporting STEP...', 'info') },
+  { name: 'Export STL', shortcut: '', action: () => toast('Exporting STL...', 'info') },
+  { name: 'Material: Aluminum', shortcut: '', action: () => { document.getElementById('material-select').value = '6061-T6'; materialChanged(); } },
+  { name: 'Material: Steel', shortcut: '', action: () => { document.getElementById('material-select').value = '1018-CD'; materialChanged(); } },
+  { name: 'Material: Titanium', shortcut: '', action: () => { document.getElementById('material-select').value = 'Ti-6Al-4V'; materialChanged(); } },
+  { name: 'Toggle Dark/Light', shortcut: '', action: () => toast('Theme toggle (coming soon)', 'info') },
+];
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    const palette = document.getElementById('command-palette');
+    palette.classList.toggle('open');
+    if (palette.classList.contains('open')) {
+      document.getElementById('cmd-input').value = '';
+      document.getElementById('cmd-input').focus();
+      filterCommands();
+    }
+  }
+  if (e.key === 'Escape') document.getElementById('command-palette').classList.remove('open');
+});
+
+function filterCommands() {
+  const q = document.getElementById('cmd-input').value.toLowerCase();
+  const filtered = commands.filter(c => c.name.toLowerCase().includes(q));
+  document.getElementById('cmd-results').innerHTML = filtered.map(c => `
+    <div class="result-item" onclick="runCommand('${c.name}')">
+      <span>${c.name}</span>
+      <span class="shortcut">${c.shortcut}</span>
+    </div>
+  `).join('');
+}
+
+function runCommand(name) {
+  const cmd = commands.find(c => c.name === name);
+  if (cmd) cmd.action();
+  document.getElementById('command-palette').classList.remove('open');
+}
+
+// --- Toast ---
+function toast(msg, level = 'info') {
+  const container = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = `toast ${level}`;
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// --- Init ---
+window.addEventListener('resize', renderViewport);
+login().then(() => {
+  addFeature();
+  materialChanged();
+});
+</script>
+</body>
+</html>

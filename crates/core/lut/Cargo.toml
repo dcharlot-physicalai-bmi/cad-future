@@ -1,0 +1,16 @@
+[package]
+name = "physical-lut"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "LUT engine — material properties, manufacturing constraints, engineering formulas. O(1) lookup, no_std core"
+
+[features]
+default = ["std"]
+std = []
+
+[dependencies]
+physical-units = { workspace = true }
+serde = { workspace = true, optional = true }

@@ -1,0 +1,13 @@
+[package]
+name = "physical-input"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Action-mapping input system — keyboard, mouse, touch, gestures"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+log = { workspace = true }

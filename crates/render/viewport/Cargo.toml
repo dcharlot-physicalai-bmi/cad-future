@@ -1,0 +1,16 @@
+[package]
+name = "physical-viewport"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "16-dimension composited renderer — orbit camera, grid, wgpu pipeline"
+
+[dependencies]
+wgpu = { workspace = true }
+glam = { workspace = true }
+bytemuck = { workspace = true }
+log = { workspace = true }
+physical-ui = { workspace = true }
+physical-input = { workspace = true }

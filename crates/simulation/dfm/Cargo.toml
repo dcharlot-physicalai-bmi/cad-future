@@ -1,0 +1,14 @@
+[package]
+name = "physical-dfm"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "DFM validation engine"
+
+[dependencies]
+glam = { workspace = true }
+physical-brep = { path = "../../geometry/brep" }
+physical-lut = { path = "../../core/lut" }
+physical-units = { path = "../../core/units" }

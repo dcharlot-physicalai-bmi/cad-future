@@ -1,0 +1,16 @@
+[package]
+name = "physical-connect-discover"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Network machine discovery aggregator (mDNS, UDP broadcast)"
+
+[dependencies]
+physical-connect-core = { path = "../core" }
+async-trait = "0.1"
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+mdns-sd = "0.18"

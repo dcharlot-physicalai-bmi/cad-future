@@ -1,0 +1,13 @@
+[package]
+name = "physical-costing"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Real-time manufacturing cost estimation — CNC, 3D print, sheet metal, casting, injection mold"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+physical-lut = { workspace = true }

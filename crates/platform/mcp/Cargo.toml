@@ -1,0 +1,37 @@
+[package]
+name = "physical-mcp"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "MCP (Model Context Protocol) tool server — exposes CAD kernel to AI agents"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+glam = { workspace = true }
+
+# Kernel crates
+physical-brep = { path = "../../geometry/brep" }
+physical-tessellation = { path = "../../geometry/tessellation" }
+physical-sketch = { path = "../../geometry/sketch" }
+physical-parametric = { path = "../../geometry/parametric" }
+physical-analytical = { path = "../../simulation/analytical" }
+physical-fea = { path = "../../simulation/fea" }
+physical-dfm = { path = "../../simulation/dfm" }
+physical-cfd = { path = "../../simulation/cfd" }
+physical-topology = { path = "../../simulation/topology" }
+physical-emit-step = { path = "../../emit/step" }
+physical-emit-stl = { path = "../../emit/stl" }
+physical-emit-oie = { path = "../../emit/oie" }
+physical-emit-dxf = { path = "../../emit/dxf" }
+physical-emit-gltf = { path = "../../emit/gltf" }
+physical-emit-threemf = { path = "../../emit/threemf" }
+physical-emit-drawing = { path = "../../emit/drawing" }
+physical-emit-obj = { path = "../../emit/obj" }
+physical-emit-iges = { path = "../../emit/iges" }
+physical-lut = { path = "../../core/lut" }
+physical-mfg-toolpath = { path = "../../mfg/toolpath" }
+physical-mfg-slicer = { path = "../../mfg/slicer" }
+physical-mfg-laser = { path = "../../mfg/laser" }

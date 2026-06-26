@@ -1,0 +1,13 @@
+[package]
+name = "physical-em"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Electromagnetic simulation — Maxwell's equations, FDTD, antenna/filter/waveguide analysis"
+
+[dependencies]
+physical-units = { workspace = true }
+physical-lut = { workspace = true }
+serde = { workspace = true, features = ["derive"] }

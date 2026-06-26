@@ -1,0 +1,13 @@
+[package]
+name = "physical-emit-idf"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "IDF 3.0 ECAD-MCAD exchange reader"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+glam = { workspace = true }
+physical-brep = { path = "../../geometry/brep" }

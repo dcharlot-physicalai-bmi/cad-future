@@ -1,0 +1,17 @@
+[package]
+name = "physical-units"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Compile-time dimensional analysis — type-safe SI/imperial physical quantities, no_std, zero runtime cost"
+
+[features]
+default = ["std"]
+std = []
+
+[dependencies]
+serde = { workspace = true, optional = true }
+
+[dev-dependencies]

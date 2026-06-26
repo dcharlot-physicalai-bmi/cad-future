@@ -1,0 +1,1 @@
+// physical-native — stub

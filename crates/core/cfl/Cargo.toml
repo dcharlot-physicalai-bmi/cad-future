@@ -1,0 +1,13 @@
+[package]
+name = "physical-cfl"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "CFL (CAD Future Language) — parametric design language spanning geometry, simulation, manufacturing, and AI"
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+physical-lut = { workspace = true }

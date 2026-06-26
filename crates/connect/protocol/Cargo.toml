@@ -1,0 +1,16 @@
+[package]
+name = "physical-connect-protocol"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "OpenIE Manufacturing Protocol — unified machine connectivity specification"
+
+[features]
+default = ["std"]
+std = []
+
+[dependencies]
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
+serde_json = { version = "1", default-features = false, features = ["alloc"] }

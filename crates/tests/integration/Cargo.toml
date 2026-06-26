@@ -1,0 +1,34 @@
+[package]
+name = "physical-integration-tests"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "End-to-end integration tests for the OpenIE CAD kernel"
+publish = false
+
+[dependencies]
+glam = { workspace = true }
+physical-brep = { path = "../../geometry/brep" }
+physical-parametric = { path = "../../geometry/parametric" }
+physical-sketch = { path = "../../geometry/sketch" }
+physical-tessellation = { path = "../../geometry/tessellation" }
+physical-analytical = { path = "../../simulation/analytical" }
+physical-fea = { path = "../../simulation/fea" }
+physical-dfm = { path = "../../simulation/dfm" }
+physical-emit-step = { path = "../../emit/step" }
+physical-emit-stl = { path = "../../emit/stl" }
+physical-emit-oie = { path = "../../emit/oie" }
+physical-overlay = { path = "../../render/overlay" }
+physical-units = { path = "../../core/units" }
+physical-lut = { path = "../../core/lut" }
+physical-cascade = { path = "../../core/cascade" }
+physical-topology = { path = "../../simulation/topology" }
+physical-cfd = { path = "../../simulation/cfd" }
+physical-emit-threemf = { path = "../../emit/threemf" }
+physical-emit-gltf = { path = "../../emit/gltf" }
+physical-emit-dxf = { path = "../../emit/dxf" }
+physical-emit-drawing = { path = "../../emit/drawing" }
+physical-search = { path = "../../reasoning/search" }
+physical-impedance = { path = "../../core/impedance" }

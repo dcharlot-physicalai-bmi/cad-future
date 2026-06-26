@@ -1,0 +1,15 @@
+[package]
+name = "physical-mfg-slicer"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "FDM 3D printing slicer — mesh to G-code pipeline"
+
+[dependencies]
+glam = { workspace = true }
+serde = { workspace = true }
+physical-mfg-toolpath = { path = "../toolpath" }
+physical-tessellation = { path = "../../geometry/tessellation" }
+physical-brep = { path = "../../geometry/brep" }

@@ -1,0 +1,17 @@
+[package]
+name = "physical-connect-firmware"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "OpenIE Manufacturing Protocol firmware adapter — embeddable in ESP32/RP2040"
+
+[features]
+default = ["std"]
+std = ["physical-connect-protocol/std"]
+
+[dependencies]
+physical-connect-protocol = { path = "../protocol", default-features = false }
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
+serde_json = { version = "1", default-features = false, features = ["alloc"] }
