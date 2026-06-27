@@ -3,6 +3,7 @@
 /data
 /cad-notes
 /.claude
+/.cargo
 *.code-workspace
 *.swp
 *.swo
