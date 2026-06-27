@@ -59,6 +59,8 @@ Core crates are `no_std` for embedded/neuromorphic tiers; higher tiers use `std`
 
 CadFuture is an **active research effort of [the Charlot Lab](https://labs.physicalai-bmi.org/charlot)** at the Institute for Physical AI, Bailey Military Institute — the *research effort* behind the lab's **Computable World Model** topic. It is under active development; interfaces will change.
 
+**Used by** [**physics-mmast-sim**](https://github.com/dcharlot-physicalai-bmi/physics-mmast-sim) (the MMAST energy + signature simulator), which builds its vehicle geometry, tessellation, and thermal FEA on CadFuture's `physical-brep` / `physical-tessellation` / `physical-fea`.
+
 ## License
 
 MIT © David Jean Charlot — see [LICENSE](LICENSE).
